@@ -1,3 +1,5 @@
+let loadedImages = 0; // Move outside the class definition
+
 class Enemy {
   constructor(game) {
     this.game = game;
@@ -17,18 +19,16 @@ class Enemy {
   }
 }
 
-let loadedImages = 0; // Move outside the class definition
-
-
-
 // Check if all images have been loaded
 function checkAllImagesLoaded() {
   loadedImages++;
   console.log("Loaded " + loadedImages + " out of " + ants.length);
   if (loadedImages === ants.length) {
-    gameLoop(); // Start the game loop when all images have been loaded
+    console.log("All images loaded");
+    gameLoop();
   }
 }
+
 
 class Ants extends Enemy {
   constructor(game) {
@@ -58,17 +58,15 @@ class Ants extends Enemy {
   }
 }
 
-
-
+// Reset the game when the restart button is clicked
 const restartButton = document.getElementById('restartButton');
 restartButton.addEventListener('click', restartGame);
-
 
 function restartGame() {
   console.log('Clearing ants and resetting score');
   ants.length = 0;
   score = 0;
-  
+
   console.log('Ants array: ' + ants);
   console.log('Score: ' + score);
 
@@ -77,8 +75,15 @@ function restartGame() {
     const ant = new Ants(game);
     ants.push(ant);
     console.log(`Ant ${i} created`);
+
+    // Add more ants
+    antAddInterval = setInterval(() => {
+      const ant = new Ants(game);
+      ants.push(ant);
+      console.log(`Ant ${i} created`);
+    }, 4000); // Add a new ant every 6.5 seconds
   }
-  
+
   // Reset game over flag
   gameOver = false;
   
@@ -86,12 +91,35 @@ function restartGame() {
   gameLoop();
 }
 
-
 /// Create the game object
 const game = {
   width: 1190,
   height: 600,
   ctx: null, // Add a property to store the context
+  canvas: null, // Add a property to store the canvas element
+  canvasWidth: null, // Add a property to store the canvas width
+  canvasHeight: null, // Add a property to store the canvas height
+  score: 0, // Add a property to store the score
+  gameOver: false, // Add a property to store the game over flag
+  winner: false, // Add a property to store the winner flag
+  antSpeed: 2.5, // Add a property to store the ant speed
+  antAddInterval: null, // Add a property to store the interval ID
+  scoreElement: document.getElementById('scoreElement'), // Add a property to store the score element
+  gameOverElement: document.getElementById('gameOverElement'), // Add a property to store the game over element
+  winnerElement: document.getElementById('winnerElement'), // Add a property to store the winner element
+  closeButton: document.getElementById('closeButton'), // Add a property to store the close button
+  instructions: document.getElementById('instructions'), // Add a property to store the instructions
+  instructionsButton: document.getElementById('instructionsButton'), // Add a property to store the instructions button
+  catPaw: null, // Add a property to store the cat paw object
+  ants: [], // Add a property to store the ants array
+  antImage: new Image(), // Add a property to store the ant image
+  catImage: new Image(), // Add a property to store the cat image
+  catWidth: 300, // Add a property to store the cat width
+  catHeight: 200, // Add a property to store the cat height
+  antWidth: 50, // Add a property to store the ant width
+  antHeight: 20, // Add a property to store the ant height
+  
+  
 
   // Initialize the game
 init() {
@@ -103,8 +131,6 @@ init() {
   this.canvas = canvas;
   this.canvasWidth = canvas.width;
   this.canvasHeight = canvas.height;
-
-  // Create an array of ant objects
  
   // Start the game loop
   gameLoop();
@@ -120,7 +146,6 @@ for (let i = 0; i < 10; i++) {
 }
 
 
-
 class CatPaw {
   constructor(game) {
     this.game = game;
@@ -133,29 +158,22 @@ class CatPaw {
     this.catImage = new Image();
     this.catImage.src = 'catImage.png'
   }
+
+
   
 
   update(mouseX, mouseY) {
     // Move the cat paw towards the mouse position
     this.x = mouseX - this.width / 2;
     this.y = mouseY - this.height / 2;
-
+  
     // Check collision with ants
     ants.forEach((ant) => {
       if (this.isColliding(ant)) {
-        // Handle collision logic here
-        // For example, you can remove the collided ant from the ants array
-        // and increase the score
-        score++;
-
+        if (!ant.markedForDeletion) {
+          score++; // Increment the score only if the ant is not already marked for deletion
+        }
         ant.markedForDeletion = true;
-
-   // Add new ants
-   //const newAntsCount = Math.floor(score / 5) + 1; // Increase the number of ants added
-   //for (let i = 0; i < newAntsCount; i++) {
-     //const newAnt = new Ants(game);
-     //ants.push(newAnt);
-   //}
  }
 });
   }
@@ -188,5 +206,4 @@ canvas.addEventListener('mousemove', (event) => {
   const mouseY = event.clientY - rect.top;
   catPaw.update(mouseX, mouseY);
 });
-
 

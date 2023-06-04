@@ -1,7 +1,9 @@
+// Create the canvas and its context
 const canvas = document.getElementById('canvas1');
 const ctx = canvas.getContext('2d');
 canvas.width = 1190;
 canvas.height = 600;
+
 
 //const catImage = new Image();
 //catImage.src = 'catImage.png';
