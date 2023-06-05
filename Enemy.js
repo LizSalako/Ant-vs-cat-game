@@ -1,19 +1,19 @@
+// Purpose: Create the Enemy class and Hero class
 let loadedImages = 0; // Move outside the class definition
 
+// Create the game loop
 class Enemy {
-  constructor(game) {
-    this.game = game;
-    this.markedForDeletion = false;
+  constructor(game) { // Add the game parameter
+    this.game = game; // Store the game object in the enemy object
+    this.markedForDeletion = false; // Add a property to store the marked for deletion flag
   }
-  
-
-  update() {
-    this.x -= 1.5;
-    if (this.x < 0 - this.width) {
+  update() { // Remove the game parameter
+    this.x -= 1.5; // Move the enemy to the left
+    if (this.x < 0 - this.width) { // Check if the enemy is outside the left edge of the canvas
       this.x = this.game.width; // Reset the enemy's x position to the right edge of the canvas
     }
   }
-
+// Draw the enemy
   draw() {
     ctx.drawImage(this.ant, this.x, this.y, this.width, this.height);
   }
@@ -22,17 +22,17 @@ class Enemy {
 // Check if all images have been loaded
 function checkAllImagesLoaded() {
   loadedImages++;
-  console.log("Loaded " + loadedImages + " out of " + ants.length);
+  console.log("Loaded " + loadedImages + " out of " + ants.length); // Log the number of loaded images
   if (loadedImages === ants.length) {
     console.log("All images loaded");
     gameLoop();
   }
 }
 
-
+// Create the ant class
 class Ants extends Enemy {
-  constructor(game) {
-    super(game);
+  constructor(game) { // Add the game parameter
+    super(game); // Call the parent class constructor and pass the game parameter
     this.antWidth = 50;
     this.antHeight = 20;
     this.width = this.antWidth;
@@ -52,7 +52,7 @@ class Ants extends Enemy {
 
   update() {
     this.x += 0.90 * this.direction; // Multiply the speed by the direction
-    console.log("x is now " + this.x);
+    console.log("x is now " + this.x); // Log the x position
     super.update();
     console.log("update() is done!");
   }
@@ -62,26 +62,27 @@ class Ants extends Enemy {
 const restartButton = document.getElementById('restartButton');
 restartButton.addEventListener('click', restartGame);
 
+// Restart the game
 function restartGame() {
-  console.log('Clearing ants and resetting score');
-  ants.length = 0;
-  score = 0;
+  console.log('Clearing ants and resetting score'); 
+  ants.length = 0; // Clear the ants array
+  score = 0; 
 
   console.log('Ants array: ' + ants);
   console.log('Score: ' + score);
 
   // Create new ants
-  for (let i = 0; i < 10; i++) {
-    const ant = new Ants(game);
-    ants.push(ant);
-    console.log(`Ant ${i} created`);
+  for (let i = 0; i < 10; i++) { // Create 10 ants
+    const ant = new Ants(game); // Create a new ant
+    ants.push(ant); // Add the ant to the ants array
+    console.log(`Ant ${i} created`); // Log the creation of the ant
 
     // Add more ants
-    antAddInterval = setInterval(() => {
-      const ant = new Ants(game);
+    antAddInterval = setInterval(() => { // Store the interval ID in the antAddInterval property
+      const ant = new Ants(game); 
       ants.push(ant);
-      console.log(`Ant ${i} created`);
-    }, 4000); // Add a new ant every 6.5 seconds
+      console.log(`Ant ${i} created`); 
+    }, 4000); // Add a new ant every 4 seconds
   }
 
   // Reset game over flag
@@ -137,7 +138,6 @@ init() {
 }
 };
 
-
 // Create an array of ant objects
 const ants = [];
 for (let i = 0; i < 10; i++) {
@@ -145,7 +145,7 @@ for (let i = 0; i < 10; i++) {
   ants.push(ant);
 }
 
-
+// Create the cat paw object
 class CatPaw {
   constructor(game) {
     this.game = game;
@@ -162,14 +162,14 @@ class CatPaw {
 
   
 
-  update(mouseX, mouseY) {
+  update(mouseX, mouseY) { // Add the mouse position parameters
     // Move the cat paw towards the mouse position
-    this.x = mouseX - this.width / 2;
-    this.y = mouseY - this.height / 2;
+    this.x = mouseX - this.width / 2; // Subtract half of the cat paw width to center the image
+    this.y = mouseY - this.height / 2; // Subtract half of the cat paw height to center the image
   
     // Check collision with ants
-    ants.forEach((ant) => {
-      if (this.isColliding(ant)) {
+    ants.forEach((ant) => { // Loop through the ants array
+      if (this.isColliding(ant)) { // Check if the cat paw is colliding with the ant
         if (!ant.markedForDeletion) {
           score++; // Increment the score only if the ant is not already marked for deletion
         }
