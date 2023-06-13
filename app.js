@@ -5,15 +5,30 @@ canvas.width = 1190;
 canvas.height = 600;
 
 
-//const catImage = new Image();
-//catImage.src = 'catImage.png';
-//const catWidth = 700;
-//const catHeight = 600;
+const startButton = document.getElementById('startButton');
+    startButton.addEventListener('click', () => {
+      // Hide the start screen
+      document.body.style.display = 'none';
 
-//const ant = new Image();
-//ant.src = 'Subject.jpg';
-//const antWidth = 50;
-//const antHeight = 20;
+      // Display the canvas
+     // Display the canvas
+const canvas = document.getElementById('canvas1');
+canvas.style.display = 'block';
+
+      // Start the game loop
+      resetGame();
+      gameLoopInterval = requestAnimationFrame(gameLoop);
+    });
+
+const catImage = new Image();
+catImage.src = 'catImage.png';
+const catWidth = 700;
+const catHeight = 600;
+
+const ant = new Image();
+ant.src = 'Subject.jpg';
+const antWidth = 50;
+const antHeight = 20;
 
 const avatar = new Image();
 avatar.src = 'Image5.jpg';

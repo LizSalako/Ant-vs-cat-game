@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans&family=Nunito+Sans&family=Open+Sans&family=Righteous&family=Signika+Negative&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@500&family=Chela+One&family=Montserrat+Alternates:wght@500&family=Nanum+Gothic&family=Raleway&family=Rubik&family=Sarabun:wght@500&display=swap');
+
 
 * {
     margin: 0;
@@ -26,11 +28,36 @@ body {
 h1 {
     text-align: center;
     font-size: 30px;
-    font-family: 'Signika Negative', sans-serif;
+    font-family: 'Chela One', cursive;
     color: #000;
     margin-top: 20px;
     margin-bottom: 20px;
+   
 }
+
+.header1 {
+animation: headerAnimation 3s ease;
+}
+
+@keyframes headerAnimation {
+    0% {
+      transform: scale(0);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  p {
+    font-family: 'Sarabun', sans-serif;
+    font-size: 20px;
+    color: #000;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+  }
+
 
 #restartButton {
     text-align: center;
@@ -51,6 +78,19 @@ h1 {
     font-family: 'Signika Negative', sans-serif;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    animation: buttonAnimation 1s ;
+  }
+
+  @keyframes buttonAnimation {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+    }
   }
   
   #restartButton:hover {
@@ -72,9 +112,7 @@ h1 {
   .button-animation {
     animation: buttonAnimation 1s infinite;
   }
-  
-    
-
+ 
 
 #catPaw {
     position: absolute;
@@ -119,6 +157,7 @@ h1 {
   font-family: 'Signika Negative', sans-serif;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  animation: instructionsAnimation 0.5s ease;
 }
 
 #instructionsButton:hover {
@@ -266,5 +305,15 @@ h3 {
     font-family: 'Signika Negative', sans-serif;
     cursor: pointer;
     transition: background-color 0.3s ease;
+  }
+}
+
+/* Add animation to the instructions */
+@keyframes instructionsAnimation {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
   }
 }

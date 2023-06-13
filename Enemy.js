@@ -126,7 +126,7 @@ const game = {
 init() {
   // Get the canvas element and its context
   const canvas = document.getElementById('canvas');
-  this.ctx = canvas.getContext('2d');
+  this.ctx = this.canvas.getContext('2d');
 
   // Assign the canvas element to the game object's properties
   this.canvas = canvas;
@@ -137,6 +137,8 @@ init() {
   gameLoop();
 }
 };
+
+
 
 // Create an array of ant objects
 const ants = [];
@@ -207,3 +209,4 @@ canvas.addEventListener('mousemove', (event) => {
   catPaw.update(mouseX, mouseY);
 });
 
+game.init();
