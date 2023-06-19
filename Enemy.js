@@ -64,6 +64,11 @@ restartButton.addEventListener('click', restartGame);
 
 // Restart the game
 function restartGame() {
+  yPos = 0; // Reset the y position of the cat paw
+  isPaused = false; // Reset the isPaused flag
+  gameStarted = false; // Reset the gameStarted flag
+  // Display the start button
+  startButton.style.display = 'block';
   console.log('Clearing ants and resetting score'); 
   ants.length = 0; // Clear the ants array
   score = 0; 
@@ -87,6 +92,7 @@ function restartGame() {
 
   // Reset game over flag
   gameOver = false;
+
   
   // Restart the game loop
   gameLoop();
@@ -119,6 +125,7 @@ const game = {
   catHeight: 200, // Add a property to store the cat height
   antWidth: 50, // Add a property to store the ant width
   antHeight: 20, // Add a property to store the ant height
+
   
   
 
@@ -159,10 +166,12 @@ class CatPaw {
     this.y = game.height - this.height;
     this.catImage = new Image();
     this.catImage.src = 'catImage.png'
+    this.catImage.onload = () => {
+      console.log('Cat image loaded');
+      this.loaded = true; // Set the loaded flag to true
+      checkAllImagesLoaded(); // Check if all images have been loaded
+    }
   }
-
-
-  
 
   update(mouseX, mouseY) { // Add the mouse position parameters
     // Move the cat paw towards the mouse position
@@ -174,6 +183,7 @@ class CatPaw {
       if (this.isColliding(ant)) { // Check if the cat paw is colliding with the ant
         if (!ant.markedForDeletion) {
           score++; // Increment the score only if the ant is not already marked for deletion
+          
         }
         ant.markedForDeletion = true;
  }
@@ -208,5 +218,14 @@ canvas.addEventListener('mousemove', (event) => {
   const mouseY = event.clientY - rect.top;
   catPaw.update(mouseX, mouseY);
 });
+
+// Add event listener to the canvas
+canvas.addEventListener('click', (event) => {
+  const rect = canvas.getBoundingClientRect();
+  const mouseX = event.clientX - rect.left;
+  const mouseY = event.clientY - rect.top;
+  catPaw.update(mouseX, mouseY);
+});
+
 
 game.init();
