@@ -1,6 +1,6 @@
 // Game
-let score = 0;
-let antSpeed = 2.5;
+let antSpeed = 0.5;
+let gameRunning = false; // Variable to track if the game loop should be running
 let gameOver = false;
 let winner = false;
 let gameLoopInterval = null; // Interval for the game loop
@@ -15,7 +15,6 @@ function drawScore() {
 }
 
 // Instructions
-
 // Add event listener to the instructions button
 const instructionsButton = document.getElementById('instructionsButton');
 instructionsButton.addEventListener('click', showInstructions);
@@ -36,93 +35,115 @@ function closeInstructions() {
   instructions.style.display = 'none';
 }
 
-
-
 // Game loop
 function gameLoop() {
+  if (!gameRunning) {
+    return; // Exit the game loop if the game is not running
+  }
+
   ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
   catPaw.draw(); // Draw the cat paw
   drawScore(); // Draw the score
 
+  // Hide the start button when the game starts
+startButton.style.display = 'none';
+
+
   if (!gameOver) {
-    ants.forEach((ant) => {
-      ant.update();
+    // Rest of the game logic...
+    ants.forEach((ant, index) => {
+      ant.update(); // Update the ant's position
       if (ant.markedForDeletion) {
-        const index = ants.indexOf(ant);
-        if (index !== -1) {
-          ants.splice(index, 1);
-          score++; // Increment the score when an ant is caught
-          antSpeed += 0.01; // Increase ant speed when caught
-        }
+        const index = ants.indexOf(ant); // Get the index of the ant
+        if(index !== -1) {
+        ants.splice(index, 1); // Remove the ant from the array if it's off the screen
+        antSpeed += 0.5
+      }
       }
       ant.draw(); // Draw the ant
 
-      if (ant.x < 0) { // If the ant reaches the left edge of the canvas
-        gameOver = true; // Set the gameOver flag to true
-        winner = false; // Set winner to false when the player fails to catch the ants
+      // Check for collision with the cat paw
+      if (ant.y + ant.size > catPaw.y && ant.y < catPaw.y + catPaw.height && ant.x + ant.size > catPaw.x && ant.x < catPaw.x + catPaw.width) {
+        ant.markedForDeletion = true; // Mark the ant for deletion
+        score++; // Increase the score
+        console.log('Score: ' + score);
       }
+
+     if (ant.x < 0) {
+      gameOver = true;
+      winner = false;
+     }
     });
-
-    if (score >= 100) { 
+    if (score >= 100) {
       winner = true;
-      gameOver = true; // Set the gameOver flag to true when the player wins
+      gameOver = true;
     }
-
     requestAnimationFrame(gameLoop);
   } else {
     ctx.fillStyle = 'white';
     ctx.font = '50px sans-serif';
     if (winner) {
-      // Display a message "Yay you cleared the ants off!" in the center of the screen
-      ctx.fillText('Yay you cleared the ants off!', canvas.width / 3 - 80, canvas.height / 2);
+      ctx.fillText('You win!', canvas.width / 2 - 100, canvas.height / 2);
     } else {
-      ctx.fillText('Game Over', canvas.width / 2 - 100, canvas.height / 2);
+      ctx.fillText('Game over!', canvas.width / 2 - 100, canvas.height / 2);
     }
-    cancelAnimationFrame(gameLoopInterval);
-    clearInterval(antAddInterval); // Clear the interval for adding new ants
+    cancelAnimationFrame(gameLoopInterval); // Stop the game loop
+    clearInterval(antAddInterval); // Stop adding new ants
     return;
   }
 }
 
-setTimeout(() => { // Wait 3 seconds before resetting the game
-  resetGame(); // Call resetGame() after 3 seconds
-}, 3000); 
+   
+// Start button event listener
+startButton.addEventListener('click', () => {
+  if (!gameRunning) {
+    gameRunning = true; // Start the game loop only if it's not already running
+    gameLoop();
+  }
+});
 
 
 
-function resetGame() { 
+
+// Reset the game
+function resetGame() {
+  yPos = 0; // Reset the y position of the cat paw
+  isPaused = false; // Reset the isPaused flag
+  gameStarted = false; // Reset the gameStarted flag
+  // Display the start button
+  startButton.style.display = 'block';
   ants.length = 0; // Clear the ants array
   clearInterval(antAddInterval);
   antSpeed = 1; // Reset the ant speed
-
-
-// Create new ants
+  
+  // Create new ants
   const numAnts = 10; // Total number of ants
-  const antsPerLocation = Math.ceil(numAnts / 2); // Number of ants per location
-
-  // Create ants at the top of the canvas
-  for (let i = 0; i < antsPerLocation; i++) { // Create 5 ants
-    const ant1 = new Ants(game); // Create a new ant
-    const ant2 = new Ants(game); 
-    ants.push(ant1, ant2); 
-    console.log("Ants", ant1.id, "and", ant2.id, "created"); 
-  }
+  const antsPerLocation = Math.ceil(numAnts / 3); // Number of ants per location
+  const antLocations = [0, canvas.width / 3, canvas.width / 3 * 2]; // Array to store the x positions of the ant locations
 
   // Create ants at the bottom of the canvas
-  antAddInterval = setInterval(() => { // Store the interval ID in the antAddInterval property
-    const ant1 = new Ants(game);
-    const ant2 = new Ants(game);
-    ants.push(ant1, ant2);
-    console.log("Ants", ant1.id, "and", ant2.id, "created");
-  }, 1500); // Add a new pair of ants every 1.5 seconds
-
+  for (let i = 0; i < antsPerLocation; i++) {
+  const ant = new Ants(game, Math.random() * (canvas.width - Ants.size), canvas.height - Ants.size); // Create a new ant at a random x position at the bottom
+  ants.push(ant);
+  }
+  
+  antAddInterval = setInterval(() => {
+  const ant = new Ants(game, Math.random() * (canvas.width - Ants.size), canvas.height - Ants.size); // Create a new ant at a random x position at the bottom
+  ants.push(ant);
+  }, 1500); // Add a new ant every 1.5 seconds
+  
   gameOver = false;
   winner = false;
   
-}
+  score = 0; // Reset the score
+  gameLoopInterval = requestAnimationFrame(gameLoop); // Start the game loop
+  game.init(); // Call the init() method on the game object
+
+  }
 
 
 resetGame(); // Call resetGame() before setting the gameLoopInterval
+
 
 gameLoopInterval = requestAnimationFrame(gameLoop); // Start the game loop
 game.init(); // Call the init() method on the game object
