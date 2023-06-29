@@ -158,7 +158,6 @@ animation: headerAnimation 2s ease;
   margin-top: 20px;
   margin-bottom: -30px;
   position: fixed;
-  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
   background-color: #f0f0f0;
@@ -230,7 +229,7 @@ animation: headerAnimation 2s ease;
 
 p {
 font-family: 'Open Sans', sans-serif;
-font-size: 20px;
+font-size: 16px;
 color: #000;
 text-align: center;
 margin-top: 20px;
