@@ -29,6 +29,7 @@ function checkAllImagesLoaded() {
   }
 }
 
+
 // Create the ant class
 class Ants extends Enemy {
   constructor(game) { // Add the game parameter
@@ -50,6 +51,8 @@ class Ants extends Enemy {
     };
   }
 
+
+
   update() {
     this.x += 0.90 * this.direction; // Multiply the speed by the direction
     console.log("x is now " + this.x); // Log the x position
@@ -57,6 +60,8 @@ class Ants extends Enemy {
     console.log("update() is done!");
   }
 }
+
+
 
 // Reset the game when the restart button is clicked
 const restartButton = document.getElementById('restartButton');
@@ -67,6 +72,7 @@ function restartGame() {
   yPos = 0; // Reset the y position of the cat paw
   isPaused = false; // Reset the isPaused flag
   gameStarted = false; // Reset the gameStarted flag
+
   // Display the start button
   startButton.style.display = 'block';
   console.log('Clearing ants and resetting score'); 
@@ -76,19 +82,16 @@ function restartGame() {
   console.log('Ants array: ' + ants);
   console.log('Score: ' + score);
 
-  // Create new ants
-  for (let i = 0; i < 10; i++) { // Create 10 ants
-    const ant = new Ants(game); // Create a new ant
-    ants.push(ant); // Add the ant to the ants array
-    console.log(`Ant ${i} created`); // Log the creation of the ant
-
-    // Add more ants
-    antAddInterval = setInterval(() => { // Store the interval ID in the antAddInterval property
-      const ant = new Ants(game); 
+ 
+   // add a bit more ants
+    for (let i = 0; i < 10; i++) {
+      const ant = new Ants(game);
       ants.push(ant);
-      console.log(`Ant ${i} created`); 
-    }, 4000); // Add a new ant every 4 seconds
+    }
+    antSpeed += 0.5; // Reset the ant speed
   }
+
+
 
   // Reset game over flag
   gameOver = false;
@@ -96,7 +99,6 @@ function restartGame() {
   
   // Restart the game loop
   gameLoop();
-}
 
 /// Create the game object
 const game = {
@@ -109,7 +111,7 @@ const game = {
   score: 0, // Add a property to store the score
   gameOver: false, // Add a property to store the game over flag
   winner: false, // Add a property to store the winner flag
-  antSpeed: 2.5, // Add a property to store the ant speed
+  antSpeed: 0.5, // Add a property to store the ant speed
   antAddInterval: null, // Add a property to store the interval ID
   scoreElement: document.getElementById('scoreElement'), // Add a property to store the score element
   gameOverElement: document.getElementById('gameOverElement'), // Add a property to store the game over element
